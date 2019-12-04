@@ -109,9 +109,9 @@ CalculateBarcodeInflections <- function(
     }
   )$x
   ## workaround for aggregate behavior noted above
-  if (class(x = whichmin_list) == 'list') { # uneven lengths
+  if (is.list(x = whichmin_list)) { # uneven lengths
     is_inflection <- unlist(x = whichmin_list)
-  } else if (class(x = whichmin_list) == 'matrix') { # even lengths
+  } else if (is.matrix(x = whichmin_list)) { # even lengths
     is_inflection <- as.vector(x = t(x = whichmin_list))
   }
   tmp <- cbind(barcode_dist_sub, is_inflection)
@@ -582,10 +582,10 @@ GetResidual <- function(
 #' mat_norm
 #'
 LogNormalize <- function(data, scale.factor = 1e4, verbose = TRUE) {
-  if (class(x = data) == "data.frame") {
+  if (inherits(x = data, what = "data.frame")) {
     data <- as.matrix(x = data)
   }
-  if (class(x = data) != "dgCMatrix") {
+  if (!inherits(x = data, what = "dgCMatrix")) {
     data <- as(object = data, Class = "dgCMatrix")
   }
   # call Rcpp function to normalize
@@ -1066,10 +1066,10 @@ Read10X_h5 <- function(filename, use.names = TRUE, unique.features = TRUE) {
 #' mat_norm
 #'
 RelativeCounts <- function(data, scale.factor = 1, verbose = TRUE) {
-  if (class(x = data) == "data.frame") {
+  if (inherits(data, "data.frame")) {
     data <- as.matrix(x = data)
   }
-  if (class(x = data) != "dgCMatrix") {
+  if (!inherits(data, "dgCMatrix")) {
     data <- as(object = data, Class = "dgCMatrix")
   }
   if (verbose) {
@@ -1419,10 +1419,10 @@ SubsetByBarcodeInflections <- function(object) {
 #' mat_norm <- TF.IDF(data = mat)
 #'
 TF.IDF <- function(data, verbose = TRUE) {
-  if (class(x = data) == "data.frame") {
+  if (inherits(x = data, what = "data.frame")) {
     data <- as.matrix(x = data)
   }
-  if (class(x = data) != "dgCMatrix") {
+  if (!inherits(x = data, what = "dgCMatrix")) {
     data <- as(object = data, Class = "dgCMatrix")
   }
   if (verbose) {
@@ -2569,10 +2569,10 @@ ClassifyCells <- function(data, q) {
 # @import Matrix
 #
 CustomNormalize <- function(data, custom_function, margin, verbose = TRUE) {
-  if (class(x = data) == "data.frame") {
+  if (inherits(data, "data.frame")) {
     data <- as.matrix(x = data)
   }
-  if (class(x = data) != "dgCMatrix") {
+  if (!inherits(data, "dgCMatrix")) {
     data <- as(object = data, Class = "dgCMatrix")
   }
   myapply <- ifelse(test = verbose, yes = pbapply, no = apply)
@@ -2782,7 +2782,7 @@ NBResiduals <- function(fmla, regression.mat, gene, return.mode = FALSE) {
       data = regression.mat
     ),
     silent = TRUE)
-  if (class(fit)[1] == 'numeric') {
+  if (is.numeric(fit)) {
     message(sprintf('glm.nb failed for gene %s; falling back to scale(log(y+1))', gene))
     resid <- scale(x = log(x = regression.mat[, 'GENE'] + 1))[, 1]
     mode <- 'scale'

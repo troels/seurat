@@ -722,7 +722,7 @@ CreateSeuratObject <- function(
       warning("Some cells in meta.data not present in provided counts matrix.")
       meta.data <- meta.data[intersect(x = rownames(x = meta.data), y = colnames(x = counts)), ]
     }
-    if (class(x = meta.data) == "data.frame") {
+    if (inherits(x = meta.data, what = "data.frame")) {
       new.meta.data <- data.frame(row.names = colnames(x = counts))
       for (ii in 1:ncol(x = meta.data)) {
         new.meta.data[rownames(x = meta.data), colnames(x = meta.data)[ii]] <- meta.data[, ii, drop = FALSE]
@@ -3115,7 +3115,7 @@ Key.Seurat <- function(object, ...) {
   old.key <- Key(object = object)
   slots <- Filter(
     f = function(x) {
-      return(class(x = slot(object = object, name = x)) == 'matrix')
+      is.matrix(x = slot(object = object, name = x))
     },
     x = slotNames(x = object)
   )
@@ -6204,7 +6204,7 @@ setMethod( # because R doesn't allow S3-style [[<- for S4 classes
     } else {
       # Add other object to Seurat object
       # Ensure cells match in value and order
-      if (!(class(x = value) %in% c('SeuratCommand', 'NULL')) && !all(Cells(x = value) == Cells(x = x))) {
+      if (!(inherits(value, c('SeuratCommand', 'NULL'))) && !all(Cells(x = value) == Cells(x = x))) {
         stop("All cells in the object being added must match the cells in this object", call. = FALSE)
       }
       # Ensure we're not duplicating object names
@@ -6224,7 +6224,7 @@ setMethod( # because R doesn't allow S3-style [[<- for S4 classes
         )
       }
       # Check keyed objects
-      if (class(x = value) %in% c('Assay', 'DimReduc')) {
+      if (inherits(value, c('Assay', 'DimReduc'))) {
         if (length(x = Key(object = value)) == 0) {
           Key(object = value) <- paste0(tolower(x = i), '_')
         } else if (!grepl(pattern = '^[[:alnum:]]+_$', x = Key(object = value))) {
