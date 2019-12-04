@@ -325,7 +325,7 @@ AverageExpression <- function(
           transposed <- TRUE
         }
 
-        data.temp <- vector(mode = "numeric", length = nrow(data.slice))
+        data.temp <- vector(mode = "numeric", length = length(features.assay))
         for (row.num in 1:length(features.assay)) {
           if (transposed) {
             row <- data.slice[, row.num]
