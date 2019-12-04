@@ -321,6 +321,7 @@ AverageExpression <- function(
         data.slice <- data.use[features.assay, temp.cells, drop = FALSE]
         data.temp <- vector(mode = "numeric", length = nrow(data.slice))
         for (row.num in 1:nrow(data.slice)) {
+          message(row.num)
           row <- data.slice[row.num, 1:ncol(data.slice)]
           data.temp[[row.num]] <- fxn.average(row)
         }
