@@ -265,13 +265,6 @@ AverageExpression <- function(
     }
     slot <- 'counts'
   }
-  fxn.average <- switch(
-    EXPR = slot,
-    'data' = function(x) {
-      return(mean(x = expm1(x = x)))
-    },
-    mean
-  )
   object.assays <- FilterObjects(object = object, classes.keep = 'Assay')
   assays <- assays %||% object.assays
   ident.orig <- Idents(object = object)
@@ -319,23 +312,11 @@ AverageExpression <- function(
       }
       if (length(x = temp.cells) > 1 ) {
         data.slice <- data.use[features.assay, temp.cells, drop = FALSE]
-        transposed <- FALSE
-        if (is(data.slice, "dgCMatrix")) {
-          data.slice <- t(data.slice)
-          transposed <- TRUE
-        }
 
-        data.temp <- vector(mode = "numeric", length = length(features.assay))
-        for (row.num in 1:length(features.assay)) {
-          if (row.num %% 1000 == 0) {
-            message(paste0("Row number ", row.num))
-          }
-          if (transposed) {
-            row <- data.slice[, row.num]
-          } else {
-            row <- data.slice[row.num, ]
-          }
-          data.temp[[row.num]] <- fxn.average(row)
+        if (slot == 'data') {
+          data.temp <- rowMeans(expm1(x = data.slice))
+        } else {
+          data.temp <- rowMeans(x = data.slice)
         }
       }
       data.all[[j]] <- data.temp
