@@ -329,9 +329,9 @@ AverageExpression <- function(
         for (row.num in 1:nrow(data.slice)) {
           message(row.num)
           if (transposed) {
-            row <- data.slice[1:ncol(data.slice), row.num]
+            row <- data.slice[, row.num]
           } else {
-            row <- data.slice[row.num, 1:ncol(data.slice)]
+            row <- data.slice[row.num, ]
           }
           data.temp[[row.num]] <- fxn.average(row)
         }
