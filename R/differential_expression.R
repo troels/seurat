@@ -549,16 +549,16 @@ FindMarkers.default <- function(
   } else {
     mean
   }
-  data.1 <- apply(
-    X = data[features, cells.1, drop = FALSE],
-    MARGIN = 1,
-    FUN = mean.fxn
-  )
-  data.2 <- apply(
-    X = data[features, cells.2, drop = FALSE],
-    MARGIN = 1,
-    FUN = mean.fxn
-  )
+  data.cells.1 <- data[features, cells.1, drop = FALSE]
+  data.cells.2 <- data[features, cells.2, drop = FALSE]
+
+  data.1 <- vector(mode = "numeric", length = length(x = features))
+  data.2 <- vector(mode = "numeric", length = length(x = features))
+  for (row in features) {
+    data.1[[row]] <- mean.fxn(data.cells.1[row, ])
+    data.2[[row]] <- mean.fxn(data.cells.2[row, ])
+  }
+
   total.diff <- (data.1 - data.2)
   if (is.null(x = reduction) && slot != "scale.data") {
     features.diff <- if (only.pos) {
