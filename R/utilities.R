@@ -319,6 +319,11 @@ AverageExpression <- function(
       }
       if (length(x = temp.cells) > 1 ) {
         data.slice <- data.use[features.assay, temp.cells, drop = FALSE]
+        if (is(data.slice, "dgCMatrix")) {
+          # Convert to dgRMatrix for speed
+          data.slice <- as(data.slice, "dgRMatrix")
+        }
+
         data.temp <- vector(mode = "numeric", length = nrow(data.slice))
         for (row.num in 1:nrow(data.slice)) {
           message(row.num)
