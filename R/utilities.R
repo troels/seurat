@@ -319,15 +319,20 @@ AverageExpression <- function(
       }
       if (length(x = temp.cells) > 1 ) {
         data.slice <- data.use[features.assay, temp.cells, drop = FALSE]
+        transposed <- FALSE
         if (is(data.slice, "dgCMatrix")) {
-          # Convert to dgRMatrix for speed
-          data.slice <- as(data.slice, "dgRMatrix")
+          data.slice <- t(data.slice)
+          transposed <- TRUE
         }
 
         data.temp <- vector(mode = "numeric", length = nrow(data.slice))
         for (row.num in 1:nrow(data.slice)) {
           message(row.num)
-          row <- data.slice[row.num, 1:ncol(data.slice)]
+          if (transposed) {
+            row <- data.slice[1:ncol(data.slice), row.num]
+          } else {
+            row <- data.slice[row.num, 1:ncol(data.slice)]
+          }
           data.temp[[row.num]] <- fxn.average(row)
         }
       }
